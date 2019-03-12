@@ -15,13 +15,6 @@ class LinkedConfig{
             'waitUntil':'load'
         };
         this.BrowsersMax=5;
-        this.ProductBrowsers=1;
-        this.PromoBrowsers =1;
-        this.KWBrowsers=1;
-    }
-
-    ProductInfo(){
-        throw 'ProductInfo method is required';
     }
 }
 module.exports = LinkedConfig;

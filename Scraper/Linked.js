@@ -14,7 +14,7 @@ class Linked extends LinkedConfig {
         let url = this.url;
         console.log(url);
         let email = 'zimmerhans912@gmail.com';
-        let password = 'Lozinka123';
+        let password = '%#$%#$%$#';
         const Chrome =  new global.Chrome(this.ChromeConfig, this.id);
         Chrome.OpenBrowser(async page => {
             let cookie = fs.readFileSync(__dirname + '/../cookie.txt',{encoding:'utf8'});
