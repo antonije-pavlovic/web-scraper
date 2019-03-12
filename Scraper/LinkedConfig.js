@@ -14,7 +14,6 @@ class LinkedConfig{
         this.ChromeConfig={
             'waitUntil':'load'
         };
-        this.BrowsersMax=5;
     }
 }
 module.exports = LinkedConfig;

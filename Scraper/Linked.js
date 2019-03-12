@@ -234,18 +234,6 @@ class Linked extends LinkedConfig {
             languages = languages.substr(1);
         return callback()
     }
-    // Save(url, breadcrumb, position, product_link, product_id, callback){
-    //     let that = this;
-    //     that.DB.CategoryInfo({
-    //         'domain_id':that.id,
-    //         'pzn':product_id,
-    //         'position':position,
-    //         'category_link':url,
-    //         'category':breadcrumb,
-    //         'screenshot':'',
-    //         'product_link':product_link
-    //     });
-    //     callback('done');
-    // }
+
 }
 module.exports = Linked;
