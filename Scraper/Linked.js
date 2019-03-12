@@ -38,11 +38,9 @@ class Linked extends LinkedConfig {
                     if($('input#login-email').length){
                         await Chrome.Page.click('input#login-email');
                         await Chrome.Page.keyboard.type(email,{delay:248});
-                        console.log('uneo email');
 
                         await Chrome.Page.click('input#login-password');
                         await Chrome.Page.keyboard.type(password,{delay: 229});
-                        console.log('uneo mail');
 
                         await Chrome.Page.waitFor(697);
                         await Chrome.Page.click('#login-submit');
@@ -61,11 +59,7 @@ class Linked extends LinkedConfig {
                            }
                            let companie = companies[i].company_name;
                            let links = [];
-                           console.log(companie);
-
                            await Chrome.Page.waitFor(5000);
-
-                           console.log('sacekao 5 sekundi');
                            await page.focus( 'input.typeahead__input' );
                            await page.keyboard.down( 'Control' );
                            await page.keyboard.press( 'A' );
@@ -100,12 +94,9 @@ class Linked extends LinkedConfig {
                                     links.push(link);
                                 }
                                 let url = await Chrome.Page.url();
-                                console.log(url)
                                 that.UrlRotator(Chrome,links,() => {
                                     Chrome.GoTo(url, {}, '', async (err,res) => {
                                         $ = that.cheerio.load(res.html);
-                                        console.log('stigao do ifa');
-
                                         if($('button.next').length){
                                             $ = null;
                                             await Chrome.Page.click('button.next');
@@ -155,8 +146,10 @@ class Linked extends LinkedConfig {
                                       })
                                   }else{
                                       Chrome.GoTo(that.companyUrl, {}, '', (err,res) => {
-                                          $ = null;
-                                          return loop(++i)
+                                          if(!err){
+                                              $ = null;
+                                              return loop(++i)
+                                          }
                                       })
                                   }
                                }
@@ -234,17 +227,11 @@ class Linked extends LinkedConfig {
         console.log('ovo je ti liste ' + typeof tmp1)
         console.log(tmp1)
         for(let i = 0 ; i < tmp1.length ; i++){
-            console.log('usao u for');
-
             let lan = $(tmp1[i]).text().trim();
-            console.log('ovo je jeziiik'+lan);
-
             languages += `,${lan}`;
         }
         if(languages)
             languages = languages.substr(1);
-
-        console.log([{profile_url,name,work,location,university,connections,languages}]);
         return callback()
     }
     // Save(url, breadcrumb, position, product_link, product_id, callback){

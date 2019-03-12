@@ -147,7 +147,6 @@ class ChromeHeadLess{
                 });
 
             }catch (err){
-                console.log(err);
                  err_msg=err.stack;
                 if(err.stack.indexOf('Error: Navigation Timeout Exceeded')>-1){
                     err_msg='Error: Navigation Timeout Exceeded';
@@ -190,7 +189,6 @@ class ChromeHeadLess{
                     console.log(msg);
                     if( ++that.CountBrowsers>that.TerminateBrowser){
                         console.log('browser terminated');
-                        global.ErrorCustom.Save(that.domain_id,pzn,err_msg,'Browser Terminated!',category,keyword);
                         that.Page=false;
                         that.Browser=false;
                         return callback(true);
