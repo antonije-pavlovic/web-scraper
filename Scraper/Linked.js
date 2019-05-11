@@ -4,25 +4,21 @@ const fs = require('fs');
 const AutoScroll = require('./modules/Scroll');
 class Linked extends LinkedConfig {
 
-    constructor(db){
+    constructor(db) {
         super();
         this.DB = db;
     }
 
-    StartPage(companies,callback){
+    StartPage(companies,callback) {
         let that = this;
-        let url = this.url;
-        console.log(url);
+        let url = this.url;      
         let email = 'zimmerhans912@gmail.com';
         let password = '%#$%#$%$#';
         const Chrome =  new global.Chrome(this.ChromeConfig, this.id);
         Chrome.OpenBrowser(async page => {
-            let cookie = fs.readFileSync(__dirname + '/../cookie.txt',{encoding:'utf8'});
-            console.log(typeof cookie);
-            if(cookie.length){
-                console.log('uso baki');
-                cookie = JSON.parse(cookie);
-                console.log(typeof  cookie);
+            let cookie = fs.readFileSync(__dirname + '/../cookie.txt',{encoding:'utf8'});            
+            if(cookie.length) {                
+                cookie = JSON.parse(cookie);                
                 await Chrome.Page.setCookie(...cookie);
             }
             Chrome.GoTo(url,{},'',async (err,res) => {
@@ -30,12 +26,12 @@ class Linked extends LinkedConfig {
                     console.error(err);
                     return false;
                 }
-                try{
+                try {
                     let $ = this.cheerio.load(res.html);
-                    if($('a.sign-in-link').length){
+                    if($('a.sign-in-link').length) {
                         await Chrome.Page.click('a.sign-in-link');
                     }
-                    if($('input#login-email').length){
+                    if($('input#login-email').length) {
                         await Chrome.Page.click('input#login-email');
                         await Chrome.Page.keyboard.type(email,{delay:248});
 
@@ -53,7 +49,7 @@ class Linked extends LinkedConfig {
 
                    Chrome.GoTo(that.companyUrl, {}, '', (err,res) => {
                        (async function loop(i) {
-                           if(companies[i] === undefined){
+                           if(companies[i] === undefined) {
                                Chrome.CloseBrowser(msg => console.log(msg));
                                return callback();
                            }
@@ -81,11 +77,11 @@ class Linked extends LinkedConfig {
                                return loop(++i);
                            await AutoScroll(Chrome.Page);
 
-                           //pokupi linkkove odradi paginaciju ako je izduvam vratim se na stranicu copmpany i lupujem iz pocetka
+                           //pokupi linkkove odradi paginaciju 
                            (async function pagination(x) {
-                               if(x === 1){
+                               if(x === 1) {
                                 let tmp =  $('div.search-result__info > a.search-result__result-link');
-                                for(let j = 0 ; j < tmp.length ; j++){
+                                for(let j = 0 ; j < tmp.length ; j++) {
                                     let link = $(tmp[j]).attr('href');
                                     if(link === '#')
                                         continue;
@@ -97,14 +93,14 @@ class Linked extends LinkedConfig {
                                 that.UrlRotator(Chrome,links,() => {
                                     Chrome.GoTo(url, {}, '', async (err,res) => {
                                         $ = that.cheerio.load(res.html);
-                                        if($('button.next').length){
+                                        if($('button.next').length) {
                                             $ = null;
                                             await Chrome.Page.click('button.next');
                                             await Chrome.Page.waitForNavigation();
                                             await Chrome.Page.waitForSelector('a.search-result__result-link');
                                             $ = that.cheerio.load(await Chrome.Page.content());
                                             return pagination(++x)
-                                        }else{
+                                        }else {
                                             Chrome.GoTo(that.companyUrl, {}, '', (err,res) => {
                                                 $ = null;
                                                 return loop(++i)
@@ -112,12 +108,12 @@ class Linked extends LinkedConfig {
                                         }
                                     })
                                  })
-                               }else{
+                               }else {
                                   await AutoScroll(Chrome.Page);
                                   links = [];
-                                  if($('div.search-result__info > a.search-result__result-link').length){
+                                  if($('div.search-result__info > a.search-result__result-link').length) {
                                       let tmp =  $('div.search-result__info > a.search-result__result-link');
-                                      for(let j = 0 ; j < tmp.length ; j++){
+                                      for(let j = 0 ; j < tmp.length ; j++) {
                                           let link = $(tmp[j]).attr('href');
                                           if(link === '#')
                                               continue;
@@ -136,7 +132,7 @@ class Linked extends LinkedConfig {
                                                   await Chrome.Page.waitForSelector('a.search-result__result-link');
                                                   $ = that.cheerio.load(await Chrome.Page.content());
                                                   return pagination(++x)
-                                              }else{
+                                              }else {
                                                   Chrome.GoTo(that.companyUrl, {}, '', (err,res) => {
                                                       $ = null;
                                                       return loop(++i)
@@ -144,9 +140,9 @@ class Linked extends LinkedConfig {
                                               }
                                           })
                                       })
-                                  }else{
+                                  }else {
                                       Chrome.GoTo(that.companyUrl, {}, '', (err,res) => {
-                                          if(!err){
+                                          if(!err) {
                                               $ = null;
                                               return loop(++i)
                                           }
@@ -185,7 +181,7 @@ class Linked extends LinkedConfig {
                 })
             })(0);
     }
-    async ParseHTML($,profile_url,page,callback){
+    async ParseHTML($,profile_url,page,callback) {
         await AutoScroll(page);
         await page.waitFor(2000);
         let name,work,experience = [],location,university,connections,languages='';
@@ -223,10 +219,8 @@ class Linked extends LinkedConfig {
         // }
 
         //Languages
-        let tmp1 = $('#languages-expandable-content ul li');
-        console.log('ovo je ti liste ' + typeof tmp1)
-        console.log(tmp1)
-        for(let i = 0 ; i < tmp1.length ; i++){
+        let tmp1 = $('#languages-expandable-content ul li');    
+        for(let i = 0 ; i < tmp1.length ; i++) {
             let lan = $(tmp1[i]).text().trim();
             languages += `,${lan}`;
         }
@@ -234,6 +228,5 @@ class Linked extends LinkedConfig {
             languages = languages.substr(1);
         return callback()
     }
-
 }
 module.exports = Linked;
