@@ -1,4 +1,4 @@
-function autoScroll(page){
+function autoScroll(page) {
     return page.evaluate(() => {
         return new Promise((resolve, reject) => {
             let totalHeight = 0;
@@ -8,7 +8,7 @@ function autoScroll(page){
                 window.scrollBy(0, distance);
                 totalHeight += distance;
 
-                if(totalHeight >= scrollHeight){
+                if(totalHeight >= scrollHeight) {
                     clearInterval(timer);
                     resolve();
                 }
