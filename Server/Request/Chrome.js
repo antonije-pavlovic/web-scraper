@@ -15,7 +15,6 @@ class ChromeHeadLess {
         this.Height='height' in options?options.height:768;
         this.headless = 'headless' in options ? options.headless : false;
     }
-
     async OpenBrowser(callback) {
         let selected_proxy = ProxyList[Math.floor(Math.random() * ProxyList.length)];
         let proxy = selected_proxy.split('@')[1];
@@ -48,7 +47,8 @@ class ChromeHeadLess {
         return callback('browser Closed');
     }
     async GoTo(url, options={}, type, callback, skip=false) {
-        if(!url)return callback(true);
+        if(!url)
+            return callback(true);
         if(!this.Page){
             //browser is terminated
             global.ErrorCustom.Save(that.domain_id,pzn,'Browser. er Terminated!','',category,keyword);
@@ -56,12 +56,10 @@ class ChromeHeadLess {
         }
         let waitUntil='waitUntil' in options?options.waitUntil:this.waitUntil;
         let err_msg='';
-
         (async function loop(i) {
             if(i > 10){
-                if(err_msg.indexOf('Skip') == -1) {
-                    global.ErrorCustom.Save(that.domain_id, pzn, err_msg, 'request failed more then 7 times;', category, keyword);
-                }
+                if(err_msg.indexOf('Skip') == -1) 
+                    global.ErrorCustom.Save(that.domain_id, pzn, err_msg, 'request failed more then 7 times;', category, keyword);                
                 return callback(true);
             }
             try {
@@ -79,7 +77,6 @@ class ChromeHeadLess {
                     await that.Page.waitForSelector(options.selector, { timeout:'timeout' in options ? options.timeout : 30000 })
                 }
                 let bodyHTML = await that.Page.evaluate(() => document.documentElement.outerHTML);
-
                 //is server error is 4XX then no error saved just return to the parser
                 if(statusCode.startsWith('4')) {
                     if(statusCode==403)
@@ -97,7 +94,7 @@ class ChromeHeadLess {
                     },1000)
                     return false;
                 }
-
+                
                 return callback(null, {
                     'html':bodyHTML,
                     'headers':headers,
